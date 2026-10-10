@@ -1,0 +1,20 @@
+[project]
+name = "desktop-text-rpc"
+version = "0.1.0"
+description = "Hobby-RPC service for OCR text detection on desktop screenshots"
+requires-python = ">=3.13"
+dependencies = [
+  "hobbyrpc",
+  "paddleocr>=2.7,<3.0",
+  "paddlepaddle",
+  "mss",
+  "numpy",
+  "Pillow",
+  "Werkzeug",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
