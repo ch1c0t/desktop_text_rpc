@@ -18,8 +18,25 @@ python -m venv .venv
 pip install -e .
 ```
 
-The first OCR request may download PaddleOCR model files and take longer than
-subsequent requests. The service uses the PaddleOCR 2.x API.
+## Prepare models for offline use
+
+Run this step while internet access is available. It downloads PaddleOCR's
+default detection, recognition, and angle-classification models and copies them
+into the project-local `models/<language>/{det,rec,cls}` directories:
+
+```sh
+python prepare_models.py
+```
+
+The language defaults to `en`. Set `PADDLEOCR_LANG=ch` before preparation for
+Chinese-language recognition. Set `PADDLEOCR_MODEL_DIR=/path/to/models` to use
+a different model root. The same environment variables must be used when
+starting the service. After preparation, the server passes the local model
+directories explicitly to PaddleOCR and does not need to download those model
+files at startup. The Python packages and compatible PaddlePaddle runtime must
+still be installed on the offline machine.
+
+The preparation step uses PaddleOCR 2.x and can take a while the first time.
 
 ## Run
 
@@ -34,8 +51,10 @@ HOBBYRPC_HOST=127.0.0.1 HOBBYRPC_PORT=8000 PADDLEOCR_LANG=en python server.py
 ```
 
 Set `PADDLEOCR_USE_GPU=true` to request GPU inference, provided PaddlePaddle has
-been installed with compatible GPU support. For a Chinese-language UI, set
-`PADDLEOCR_LANG=ch`.
+been installed with compatible GPU support.
+
+If local models have not been prepared, PaddleOCR falls back to its default
+model-cache behavior and may download models on the first OCR request.
 
 ## RPC methods
 
