@@ -4,57 +4,55 @@ A small [Hobby-RPC](https://github.com/ch1c0t/python.hobbyrpc#server) service th
 captures the server's primary desktop monitor, runs PaddleOCR, and checks whether
 a requested string appears in the screenshot.
 
-## Install
+## Install with uv
 
-Python 3.10+ is recommended. Install PaddlePaddle using the command appropriate
-for your CPU/GPU and platform from the
-[PaddlePaddle installation guide](https://www.paddlepaddle.org.cn/install/quick).
-
-Then install this project:
+Install PaddlePaddle using the command appropriate for your CPU/GPU and platform
+from the [PaddlePaddle installation guide](https://www.paddlepaddle.org.cn/install/quick).
+Then sync the project with `uv`:
 
 ```sh
-python -m venv .venv
-. .venv/bin/activate
-pip install -e .
+uv sync
 ```
 
 ## Prepare models for offline use
 
-Run this step while internet access is available. It downloads PaddleOCR's
-default detection, recognition, and angle-classification models and copies them
-into the project-local `models/<language>/{det,rec,cls}` directories:
+Run this command while internet access is available. It downloads PaddleOCR's
+default detection, recognition, and angle-classification models and stores them
+under `models/<language>/{det,rec,cls}`:
 
 ```sh
-python prepare_models.py
+uv run desktop-text-rpc prepare-models
 ```
 
-The language defaults to `en`. Set `PADDLEOCR_LANG=ch` before preparation for
-Chinese-language recognition. Set `PADDLEOCR_MODEL_DIR=/path/to/models` to use
-a different model root. The same environment variables must be used when
-starting the service. After preparation, the server passes the local model
-directories explicitly to PaddleOCR and does not need to download those model
-files at startup. The Python packages and compatible PaddlePaddle runtime must
-still be installed on the offline machine.
-
-The preparation step uses PaddleOCR 2.x and can take a while the first time.
-
-## Run
+Configure language, model directory, and GPU usage through CLI options:
 
 ```sh
-python server.py
+uv run desktop-text-rpc prepare-models --lang en --model-dir ./models --no-gpu
 ```
 
-Defaults to `127.0.0.1:8000`. Configuration:
+The language defaults to `en`; use `--lang ch` for Chinese-language recognition.
+The model directory defaults to `./models` relative to the project. The same
+language and model-directory settings must be used when serving. The Python
+packages and compatible PaddlePaddle runtime must also be installed on any
+offline machine.
+
+## Run the service
 
 ```sh
-HOBBYRPC_HOST=127.0.0.1 HOBBYRPC_PORT=8000 PADDLEOCR_LANG=en python server.py
+uv run desktop-text-rpc serve
 ```
 
-Set `PADDLEOCR_USE_GPU=true` to request GPU inference, provided PaddlePaddle has
-been installed with compatible GPU support.
+The server binds to `127.0.0.1:8000` by default. Options include:
 
-If local models have not been prepared, PaddleOCR falls back to its default
-model-cache behavior and may download models on the first OCR request.
+```sh
+uv run desktop-text-rpc serve --host 127.0.0.1 --port 8000 --lang en --model-dir ./models --no-gpu
+```
+
+The CLI options can also be configured with `PADDLEOCR_LANG`,
+`PADDLEOCR_MODEL_DIR`, `PADDLEOCR_USE_GPU`, `HOBBYRPC_HOST`, and
+`HOBBYRPC_PORT` environment variables. Explicit CLI options override those
+environment defaults. If local models have not been prepared, PaddleOCR may
+download models on the first OCR request.
 
 ## RPC methods
 
