@@ -40,8 +40,12 @@ Otherwise it follows `XDG_DATA_HOME`, defaulting to `~/.local/share`.
 uv run desktop-text-rpc serve
 ```
 
-The service binds to `127.0.0.1:8000` by default. Clients select the X11 display
-for each RPC call, so one server can serve multiple Xephyr instances.
+The service listens on the Unix domain socket
+`~/.local/share/desktop-text-rpc/socket` by default. Set
+`DESKTOP_TEXT_RPC_SOCKET` or pass `--socket /path/to/socket` to override it.
+The parent directory is created automatically and the socket is restricted to
+the current user. Clients select the X11 display on each RPC call, so one
+service can serve multiple Xephyr instances.
 
 ## RPC methods
 
@@ -50,7 +54,7 @@ for each RPC call, so one server can serve multiple Xephyr instances.
 ```python
 from hobbyrpc import Client
 
-rpc = Client(address="http://127.0.0.1:8000")
+rpc = Client(address="/home/user/.local/share/desktop-text-rpc/socket")
 result = rpc(
     "TextPresent",
     text="Press a key",
@@ -61,13 +65,14 @@ result = rpc(
 print(result["found"])
 print(result["matches"])
 
-# Query a different Xephyr instance on the same server.
+# Query a different Xephyr instance on the same socket.
 other = rpc("TextPresent", text="Login", display=":2")
 ```
 
-If `display` is omitted, the process's `DISPLAY` environment variable is used.
-The response includes `found`, the original `query`, matching OCR lines, and all
-recognized lines. Matching is a case-insensitive substring check by default.
+Replace `/home/user` with the account's home directory. If `display` is
+omitted, the process's `DISPLAY` environment variable is used. The response
+includes `found`, the original `query`, matching OCR lines, and all recognized
+lines. Matching is a case-insensitive substring check by default.
 `min_confidence` ranges from `0.0` to `1.0`.
 
 To retrieve every recognized line from a particular display:
@@ -86,18 +91,15 @@ Runtime logs are written to `~/.local/state/paddleocr/desktop-text-rpc.log`.
 Override this root with `--state-dir` or `PADDLEOCR_STATE_DIR`; otherwise it
 follows `XDG_STATE_HOME`, defaulting to `~/.local/state`. CLI options can also
 be configured with `PADDLEOCR_LANG`, `PADDLEOCR_MODEL_DIR`,
-`PADDLEOCR_STATE_DIR`, `PADDLEOCR_USE_GPU`, `HOBBYRPC_HOST`, and
-`HOBBYRPC_PORT`. Explicit CLI options override those environment defaults.
-If local models have not been prepared, PaddleOCR may download models on the
-first OCR request.
+`PADDLEOCR_STATE_DIR`, `PADDLEOCR_USE_GPU`, and `DESKTOP_TEXT_RPC_SOCKET`.
+Explicit CLI options override environment defaults. If local models have not
+been prepared, PaddleOCR may download models on the first OCR request.
 
 ## Desktop and security notes
 
 - Run the service with permission to access each requested X server.
 - This captures monitor 1 (the primary monitor) of the selected display; adapt
   `capture_desktop()` if you need a particular monitor or the combined virtual desktop.
-- The server binds to loopback by default because RPC calls can trigger screen
-  capture and consume CPU. Do not expose it publicly without adding
-  authentication and restricting network access.
+- The Unix socket is local IPC and is created with owner-only permissions.
 - OCR is approximate: low resolution, scaling, unusual fonts, and animation can
   affect detection. Use `min_confidence` to tune false positives/negatives.
