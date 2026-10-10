@@ -1,21 +1,15 @@
 """Run the desktop OCR Hobby-RPC service."""
 
 import logging
-import os
 
-from werkzeug.serving import run_simple
-
-from desktop_text_rpc.paths import state_dir
+from desktop_text_rpc.paths import socket_path, state_dir
 from desktop_text_rpc.rpc.methods import rpc
+from desktop_text_rpc.rpc.unix_server import serve_unix
 
 
 def main():
-    """Serve on the configured address, defaulting to loopback."""
+    """Serve RPC through the local Unix socket."""
     state = state_dir()
     state.mkdir(parents=True, exist_ok=True)
-    logger = logging.getLogger("werkzeug")
-    logger.setLevel(logging.INFO)
-    logger.addHandler(logging.FileHandler(state / "desktop-text-rpc.log"))
-    host = os.getenv("HOBBYRPC_HOST", "127.0.0.1")
-    port = int(os.getenv("HOBBYRPC_PORT", "8000"))
-    run_simple(host, port, rpc, threaded=True)
+    logging.basicConfig(filename=state / "desktop-text-rpc.log", level=logging.INFO)
+    serve_unix(rpc, socket_path())
