@@ -6,6 +6,7 @@ from pathlib import Path
 
 from paddleocr import PaddleOCR
 
+from desktop_text_rpc.ocr.backend import require_gpu
 from desktop_text_rpc.paths import model_dir
 
 
@@ -22,6 +23,8 @@ def prepare_models():
     """Prepare detector, recognizer, and classifier model directories."""
     lang = os.getenv("PADDLEOCR_LANG", "en")
     gpu = os.getenv("PADDLEOCR_USE_GPU", "false").lower() == "true"
+    if gpu:
+        require_gpu()
     PaddleOCR(use_angle_cls=True, lang=lang, show_log=False, use_gpu=gpu)
     destination = model_dir() / lang
     destination.mkdir(parents=True, exist_ok=True)
