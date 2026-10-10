@@ -19,6 +19,6 @@ def parser():
         cmd.add_argument("--gpu", action=argparse.BooleanOptionalAction,
                          default=os.getenv("PADDLEOCR_USE_GPU", "false").lower() == "true")
         if name == "serve":
-            cmd.add_argument("--host", default=os.getenv("HOBBYRPC_HOST", "127.0.0.1"))
-            cmd.add_argument("--port", type=int, default=int(os.getenv("HOBBYRPC_PORT", "8000")))
+            cmd.add_argument("--socket", default=os.getenv("DESKTOP_TEXT_RPC_SOCKET"),
+                             help="Unix socket path")
     return root
