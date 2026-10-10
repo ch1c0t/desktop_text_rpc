@@ -7,6 +7,8 @@ from desktop_text_rpc.screen import capture_desktop
 
 @rpc.fun
 class RecognizeDesktop:
+    display: str | None = None
+
     def call(self):
-        """Return OCR lines from a fresh desktop screenshot."""
-        return {"lines": recognized_lines(capture_desktop())}
+        """Return OCR lines from a fresh screenshot of the selected display."""
+        return {"lines": recognized_lines(capture_desktop(self.display))}
