@@ -9,15 +9,10 @@ string appears in the screenshot.
 This project depends on `paddlepaddle-gpu`. Install the wheel matching your
 NVIDIA driver/CUDA combination using the
 [official PaddlePaddle installation guide](https://www.paddlepaddle.org.cn/install/quick).
-For example, the current CUDA 12.6 wheel can be installed with:
-
-```sh
-uv pip install paddlepaddle-gpu==3.3.0 --index-url https://www.paddlepaddle.org.cn/packages/stable/cu126/
-uv sync
-```
-
-Choose the CUDA index and PaddlePaddle version appropriate for your system;
-the example is not universal. GPU inference also requires a compatible NVIDIA
+The project currently configures the PaddlePaddle CUDA 12.6 package index.
+Run `uv sync` to install the dependencies. If your driver requires a different
+CUDA build, change the `paddle-cu126` index URL in `pyproject.toml` to the
+matching index listed in the official guide before syncing. GPU inference also requires a compatible NVIDIA
 GPU and driver. The service checks GPU capability when `--gpu` is requested
 and raises an explicit error if the installed PaddlePaddle build lacks CUDA
 support or no CUDA GPU can be initialized. It will not silently fall back to CPU.
