@@ -18,13 +18,16 @@ dependencies = [
 ]
 
 [project.scripts]
-desktop-text-rpc = "cli:main"
+desktop-text-rpc = "desktop_text_rpc.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest"]
 
 [tool.setuptools]
-py-modules = ["server", "ocr_models", "cli", "prepare_models"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+pythonpath = ["src"]
