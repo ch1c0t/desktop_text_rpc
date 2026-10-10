@@ -1,0 +1,6 @@
+version: 2.0
+shards:
+  hobby-rpc:
+    git: https://github.com/ch1c0t/crystal.hobby-rpc.client.git
+    version: 0.1.0+git.commit.f8297e6d75b2110893ae3d3f5a4e52831ac9470f
+
