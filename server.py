@@ -5,9 +5,10 @@ from functools import lru_cache
 
 import mss
 import numpy as np
-from PIL import Image
 from hobbyrpc import Server
 from paddleocr import PaddleOCR
+
+from ocr_models import model_config
 
 rpc = Server()
 
@@ -15,12 +16,13 @@ rpc = Server()
 @lru_cache(maxsize=1)
 def get_ocr():
     # Keep model initialization lazy: importing this module should be cheap.
-    # Use the PaddleOCR 2.x API for a stable, predictable result structure.
+    # Local models are preferred when prepared; otherwise PaddleOCR uses defaults.
     return PaddleOCR(
         use_angle_cls=True,
         lang=os.getenv("PADDLEOCR_LANG", "en"),
         show_log=False,
         use_gpu=os.getenv("PADDLEOCR_USE_GPU", "false").lower() == "true",
+        **model_config(),
     )
 
 
