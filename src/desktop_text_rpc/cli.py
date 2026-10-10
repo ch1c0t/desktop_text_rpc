@@ -11,6 +11,8 @@ def main():
     os.environ["PADDLEOCR_USE_GPU"] = str(args.gpu).lower()
     if args.model_dir:
         os.environ["PADDLEOCR_MODEL_DIR"] = args.model_dir
+    if args.state_dir:
+        os.environ["PADDLEOCR_STATE_DIR"] = args.state_dir
     if args.command == "prepare-models":
         from desktop_text_rpc.model_prepare import prepare_models
         prepare_models()
