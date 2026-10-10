@@ -6,7 +6,7 @@ from pathlib import Path
 
 from paddleocr import PaddleOCR
 
-from desktop_text_rpc.model_config import PROJECT_DIR
+from desktop_text_rpc.paths import model_dir
 
 
 def prepare_models():
@@ -19,8 +19,7 @@ def prepare_models():
         "rec": getattr(ocr.text_recognizer, "rec_model_dir", None),
         "cls": getattr(ocr.text_classifier, "cls_model_dir", None),
     }
-    root = Path(os.getenv("PADDLEOCR_MODEL_DIR", PROJECT_DIR / "models"))
-    destination = root / lang
+    destination = model_dir() / lang
     destination.mkdir(parents=True, exist_ok=True)
     for name, source in sources.items():
         if not source:
