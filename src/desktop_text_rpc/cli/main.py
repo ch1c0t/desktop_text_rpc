@@ -17,7 +17,7 @@ def main():
         from desktop_text_rpc.ocr.prepare import prepare_models
         prepare_models()
         return
-    os.environ["HOBBYRPC_HOST"] = args.host
-    os.environ["HOBBYRPC_PORT"] = str(args.port)
+    if args.socket:
+        os.environ["DESKTOP_TEXT_RPC_SOCKET"] = args.socket
     from desktop_text_rpc.rpc.server import main as serve
     serve()
