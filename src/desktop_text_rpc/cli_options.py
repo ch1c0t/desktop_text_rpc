@@ -15,6 +15,7 @@ def parser():
         cmd = commands.add_parser(name, help=help_text)
         cmd.add_argument("--lang", default=os.getenv("PADDLEOCR_LANG", "en"))
         cmd.add_argument("--model-dir", default=os.getenv("PADDLEOCR_MODEL_DIR"))
+        cmd.add_argument("--state-dir", default=os.getenv("PADDLEOCR_STATE_DIR"))
         cmd.add_argument("--gpu", action=argparse.BooleanOptionalAction,
                          default=os.getenv("PADDLEOCR_USE_GPU", "false").lower() == "true")
         if name == "serve":
