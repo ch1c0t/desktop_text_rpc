@@ -3,8 +3,6 @@
 import os
 from functools import lru_cache
 
-from paddleocr import PaddleOCR
-
 from desktop_text_rpc.ocr.backend import require_gpu
 from desktop_text_rpc.ocr.models import model_config
 
@@ -15,6 +13,16 @@ def get_ocr():
     gpu = os.getenv("PADDLEOCR_USE_GPU", "false").lower() == "true"
     if gpu:
         require_gpu()
+    try:
+        from paddleocr import PaddleOCR
+    except (ImportError, OSError) as exc:
+        if gpu:
+            raise RuntimeError(
+                "GPU inference was requested, but PaddleOCR/PaddlePaddle "
+                "could not load its native runtime. Check the NVIDIA driver "
+                "and CUDA compatibility. Original error: " + str(exc)
+            ) from exc
+        raise
     return PaddleOCR(
         use_angle_cls=True,
         lang=os.getenv("PADDLEOCR_LANG", "en"),
