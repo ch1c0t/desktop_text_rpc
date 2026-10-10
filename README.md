@@ -18,7 +18,7 @@ uv sync
 
 Run this command while internet access is available. It downloads PaddleOCR's
 default detection, recognition, and angle-classification models and stores them
-under `models/<language>/{det,rec,cls}`:
+under `~/.local/share/paddleocr/<language>/{det,rec,cls}` by default:
 
 ```sh
 uv run desktop-text-rpc prepare-models
@@ -31,10 +31,8 @@ uv run desktop-text-rpc prepare-models --lang en --model-dir ./models --no-gpu
 ```
 
 The language defaults to `en`; use `--lang ch` for Chinese-language recognition.
-The model directory defaults to `./models` relative to the project. The same
-language and model-directory settings must be used when serving. The Python
-packages and compatible PaddlePaddle runtime must also be installed on any
-offline machine.
+The model root can be overridden with `--model-dir` or `PADDLEOCR_MODEL_DIR`.
+Otherwise it follows `XDG_DATA_HOME`, defaulting to `~/.local/share`.
 
 ## Run the service
 
@@ -48,8 +46,11 @@ The server binds to `127.0.0.1:8000` by default. Options include:
 uv run desktop-text-rpc serve --host 127.0.0.1 --port 8000 --lang en --model-dir ./models --no-gpu
 ```
 
-The CLI options can also be configured with `PADDLEOCR_LANG`,
-`PADDLEOCR_MODEL_DIR`, `PADDLEOCR_USE_GPU`, `HOBBYRPC_HOST`, and
+Runtime logs are written to `~/.local/state/paddleocr/desktop-text-rpc.log`.
+Override this root with `--state-dir` or `PADDLEOCR_STATE_DIR`; otherwise it
+follows `XDG_STATE_HOME`, defaulting to `~/.local/state`. The CLI options can
+also be configured with `PADDLEOCR_LANG`, `PADDLEOCR_MODEL_DIR`,
+`PADDLEOCR_STATE_DIR`, `PADDLEOCR_USE_GPU`, `HOBBYRPC_HOST`, and
 `HOBBYRPC_PORT` environment variables. Explicit CLI options override those
 environment defaults. If local models have not been prepared, PaddleOCR may
 download models on the first OCR request.
