@@ -9,17 +9,18 @@ from desktop_text_rpc.screen import capture_desktop
 @rpc.fun
 class TextPresent:
     text: str
+    display: str | None = None
     case_sensitive: bool = False
     min_confidence: float = 0.5
 
     def call(self):
-        """Capture the desktop and search recognized text."""
+        """Capture the selected display and search recognized text."""
         target = self.text.strip()
         if not target:
             return self.error(self.text, "text must not be empty")
         if not 0 <= self.min_confidence <= 1:
             return self.error(target, "min_confidence must be between 0 and 1")
-        lines = recognized_lines(capture_desktop())
+        lines = recognized_lines(capture_desktop(self.display))
         matches = find_matches(lines, target, self.case_sensitive, self.min_confidence)
         return {"found": bool(matches), "query": target,
                 "matches": matches, "lines": lines}
