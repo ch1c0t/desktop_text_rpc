@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "desktop-text-rpc"
 version = "0.1.0"
 description = "Hobby-RPC service for OCR text detection on desktop screenshots"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
   "hobbyrpc",
   "paddleocr>=2.7,<3.0",
