@@ -5,7 +5,7 @@ Summary: Hobby-RPC service for OCR text detection on desktop screenshots
 Requires-Python: >=3.13
 Requires-Dist: hobbyrpc
 Requires-Dist: paddleocr<3.0,>=2.7
-Requires-Dist: paddlepaddle
+Requires-Dist: paddlepaddle-gpu
 Requires-Dist: mss
 Requires-Dist: numpy
 Requires-Dist: Pillow

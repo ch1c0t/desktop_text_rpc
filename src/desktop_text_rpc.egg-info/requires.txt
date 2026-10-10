@@ -1,6 +1,6 @@
 hobbyrpc
 paddleocr<3.0,>=2.7
-paddlepaddle
+paddlepaddle-gpu
 mss
 numpy
 Pillow

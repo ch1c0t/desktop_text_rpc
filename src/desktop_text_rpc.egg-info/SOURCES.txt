@@ -14,6 +14,7 @@ src/desktop_text_rpc/cli/__init__.py
 src/desktop_text_rpc/cli/main.py
 src/desktop_text_rpc/cli/options.py
 src/desktop_text_rpc/ocr/__init__.py
+src/desktop_text_rpc/ocr/backend.py
 src/desktop_text_rpc/ocr/engine.py
 src/desktop_text_rpc/ocr/models.py
 src/desktop_text_rpc/ocr/prepare.py
