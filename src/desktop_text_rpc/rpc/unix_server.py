@@ -5,6 +5,12 @@ from socketserver import ThreadingMixIn
 from wsgiref.simple_server import WSGIServer, WSGIRequestHandler
 
 
+class UnixWSGIRequestHandler(WSGIRequestHandler):
+    def address_string(self):
+        """Unix sockets have no peer IP address to reverse-resolve."""
+        return "localhost"
+
+
 class UnixWSGIServer(ThreadingMixIn, WSGIServer):
     address_family = socket.AF_UNIX
     daemon_threads = True
@@ -22,7 +28,7 @@ def serve_unix(app, path):
         if not path.is_socket():
             raise RuntimeError(f"Refusing to replace non-socket: {path}")
         path.unlink()
-    server = UnixWSGIServer(str(path), WSGIRequestHandler)
+    server = UnixWSGIServer(str(path), UnixWSGIRequestHandler)
     server.set_app(app)
     path.chmod(0o600)
     try:
