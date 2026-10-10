@@ -7,11 +7,9 @@ from wsgiref.simple_server import WSGIServer, WSGIRequestHandler
 
 class UnixWSGIRequestHandler(WSGIRequestHandler):
     def get_environ(self):
-        """Build a WSGI environment without assuming an IP peer address."""
-        env = self.server.base_environ.copy()
-        env["SERVER_PROTOCOL"] = self.request_version
-        env["REMOTE_ADDR"] = "localhost"
-        return env
+        """Build a WSGI environment for a Unix-socket client."""
+        self.client_address = ("localhost", 0)
+        return super().get_environ()
 
     def address_string(self):
         """Unix sockets have no peer IP address to reverse-resolve."""
