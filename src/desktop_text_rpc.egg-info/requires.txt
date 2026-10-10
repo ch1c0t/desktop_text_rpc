@@ -1,0 +1,10 @@
+hobbyrpc
+paddleocr<3.0,>=2.7
+paddlepaddle
+mss
+numpy
+Pillow
+Werkzeug
+
+[dev]
+pytest

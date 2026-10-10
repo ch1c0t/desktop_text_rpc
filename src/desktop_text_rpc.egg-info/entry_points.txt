@@ -1,0 +1,2 @@
+[console_scripts]
+desktop-text-rpc = desktop_text_rpc.cli:main
