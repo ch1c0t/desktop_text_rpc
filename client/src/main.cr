@@ -1,5 +1,6 @@
 require "json"
 require "option_parser"
+require "path"
 require "hobby-rpc"
 
 socket = ENV["DESKTOP_TEXT_RPC_SOCKET"]? ||
