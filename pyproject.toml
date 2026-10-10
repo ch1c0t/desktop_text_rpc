@@ -23,6 +23,14 @@ desktop-text-rpc = "desktop_text_rpc.cli:main"
 [project.optional-dependencies]
 dev = ["pytest"]
 
+[[tool.uv.index]]
+name = "paddle-cu126"
+url = "https://www.paddlepaddle.org.cn/packages/stable/cu126/"
+explicit = true
+
+[tool.uv.sources]
+paddlepaddle-gpu = { index = "paddle-cu126" }
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 
