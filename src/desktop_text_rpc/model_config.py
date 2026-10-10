@@ -1,14 +1,13 @@
 """Locate locally prepared PaddleOCR model directories."""
 
 import os
-from pathlib import Path
 
-PROJECT_DIR = Path(__file__).resolve().parents[2]
+from desktop_text_rpc.paths import model_dir
 
 
 def model_config():
     """Return local model arguments, or an empty mapping for defaults."""
-    root = Path(os.getenv("PADDLEOCR_MODEL_DIR", PROJECT_DIR / "models"))
+    root = model_dir()
     lang = os.getenv("PADDLEOCR_LANG", "en")
     paths = {key: root / lang / name for key, name in (
         ("det_model_dir", "det"), ("rec_model_dir", "rec"),
