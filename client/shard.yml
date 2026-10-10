@@ -1,0 +1,17 @@
+name: desktop-text-rpc-client
+version: 0.1.0
+
+authors:
+  - Desktop Text RPC contributors
+
+targets:
+  desktop-text-rpc-client:
+    main: src/main.cr
+
+dependencies:
+  hobby-rpc:
+    github: ch1c0t/crystal.hobby-rpc.client
+
+crystal: ">= 1.21.0"
+
+license: MIT
